@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Солнечная система + Чёрная дыра</title>
+  <style>
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at center, #000010, #000); /* 👈 вот это важно */
+}
+
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(white 0.5px, transparent 0.5px);
+      background-size: 3px 3px;
+      opacity: 0.1;
+      z-index: 0;
+    }
+
+.galaxy {
+  position: relative;
+  width: 1000px;
+  height: 1000px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+    .black-hole {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: radial-gradient(circle, #000 40%, rgba(0, 0, 0, 0.5));
+      border-radius: 50%;
+      box-shadow: 0 0 60px 20px rgba(0, 0, 0, 0.8);
+      z-index: 9;
+    }
+
+    .sun {
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, #ffdd00, #ff9900);
+      border-radius: 50%;
+      box-shadow: 0 0 40px 20px #ffaa00;
+      position: absolute;
+      z-index: 10;
+    }
+
+    .orbit {
+      position: absolute;
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 50%;
+      animation: rotate linear infinite;
+    }
+
+    .planet {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+    }
+
+    .label {
+      position: absolute;
+      font-size: 10px;
+      text-align: center;
+      transform: translate(-50%, 100%);
+      white-space: nowrap;
+      pointer-events: none;
+      color: white;
+    }
+
+    .moon-orbit {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.1);
+      animation: rotate 2s linear infinite;
+      top: 50%;
+      left: 50%;
+      transform: translate(55px, -50%);
+    }
+
+    .moon {
+      width: 4px;
+      height: 4px;
+      background: #ddd;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(8px, -50%);
+    }
+
+    .comet {
+      position: absolute;
+      width: 100px;
+      height: 2px;
+      background: linear-gradient(to left, white, transparent);
+      top: -50px;
+      left: -150px;
+      transform: rotate(45deg);
+      animation: flyby 10s linear infinite;
+      opacity: 0.8;
+      z-index: 20;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes flyby {
+      0% {
+        top: -50px;
+        left: -150px;
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      50% {
+        top: 50%;
+        left: 50%;
+        opacity: 1;
+      }
+      80% {
+        opacity: 1;
+      }
+      100% {
+        top: 120%;
+        left: 120%;
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="galaxy">
+    <div class="black-hole"></div>
+    <div class="sun"></div>
+    <div class="comet"></div>
+
+    <script>
+      const galaxy = document.querySelector('.galaxy');
+
+      const planets = [
+        { name: "Меркурий", size: 10, color: "#aaa", radius: 80, speed: 5 },
+        { name: "Венера", size: 14, color: "#cc9966", radius: 120, speed: 8 },
+        { name: "Земля", size: 16, color: "#3399ff", radius: 160, speed: 10, hasMoon: true },
+        { name: "Марс", size: 12, color: "#ff3300", radius: 200, speed: 12 },
+        { name: "Юпитер", size: 30, color: "#ffcc66", radius: 250, speed: 20 },
+        { name: "Сатурн", size: 24, color: "#ffdbac", radius: 300, speed: 24 },
+        { name: "Уран", size: 20, color: "#66ccff", radius: 350, speed: 28 },
+        { name: "Нептун", size: 18, color: "#3366cc", radius: 400, speed: 32 },
+      ];
+
+      planets.forEach((p) => {
+        const orbit = document.createElement('div');
+        orbit.className = 'orbit';
+        orbit.style.width = `${p.radius * 2}px`;
+        orbit.style.height = `${p.radius * 2}px`;
+        orbit.style.animationDuration = `${p.speed}s`;
+
+        const planet = document.createElement('div');
+        planet.className = 'planet';
+        planet.style.width = `${p.size}px`;
+        planet.style.height = `${p.size}px`;
+        planet.style.background = p.color;
+        planet.style.transform = `translate(${p.radius}px, -50%)`;
+
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.textContent = p.name;
+        planet.appendChild(label);
+
+        if (p.hasMoon) {
+          const moonOrbit = document.createElement('div');
+          moonOrbit.className = 'moon-orbit';
+
+          const moon = document.createElement('div');
+          moon.className = 'moon';
+          moonOrbit.appendChild(moon);
+          planet.appendChild(moonOrbit);
+        }
+
+        orbit.appendChild(planet);
+        galaxy.appendChild(orbit);
+      });
+    </script>
+  </div>
+</body>
+</html>
